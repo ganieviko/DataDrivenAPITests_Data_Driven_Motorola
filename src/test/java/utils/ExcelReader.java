@@ -70,6 +70,9 @@ public class ExcelReader {
                 String value = null;
                 if(row.getCell(j) != null) {
                     value = row.getCell(j).toString();
+                    if(value.equals("\"\"")) {
+                        value = "";
+                    }
                 }
                 map.put(key, value);
             }
