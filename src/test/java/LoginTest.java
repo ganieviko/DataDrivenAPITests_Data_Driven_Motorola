@@ -1,8 +1,15 @@
+import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
 
 public class LoginTest {
     private Connection connection;
@@ -40,5 +47,27 @@ public class LoginTest {
     @Test(dataProvider = "loginTestCases")
     public void loginTest(String username, String password, int statusCode, String errorMessage) {
         System.out.println(username + "\t\t\t" + password + "\t\t\t" + statusCode + "\t\t\t" + errorMessage);
+
+        Map<String, String> body = new HashMap<>();
+        if (username != null) {
+            body.put("username", username);
+        }
+        if (password != null) {
+            body.put("password", password);
+        }
+
+        ValidatableResponse validatableResponse = given()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .post("https://test.campus.techno.study/auth/login")
+                .then();
+
+        validatableResponse.statusCode(statusCode);
+
+        if (errorMessage != null) {
+            validatableResponse.body("title", equalTo(errorMessage));
+        }
+
     }
 }
