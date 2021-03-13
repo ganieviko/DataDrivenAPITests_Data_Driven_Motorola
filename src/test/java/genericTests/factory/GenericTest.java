@@ -10,7 +10,12 @@ public class GenericTest {
     }
 
     @Test
-    public void testCase() {
+    public void testCase1() {
         System.out.println(parameter);
+    }
+
+    @Test
+    public void testCase2() {
+        System.out.println(parameter +" in second test case");
     }
 }
