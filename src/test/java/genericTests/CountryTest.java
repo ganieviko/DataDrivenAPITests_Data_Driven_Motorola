@@ -4,27 +4,25 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookies;
 import io.restassured.response.ValidatableResponse;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import utils.ExcelReader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 
 public class CountryTest {
     private Cookies cookies;
+    private List<String> idsForCleanedUp;
 
     @BeforeClass
     public void setUp() {
         RestAssured.baseURI = "https://test.campus.techno.study";
-
 
         Map<String, String> credentials = new HashMap<>();
         credentials.put("username", "daulet2030@gmail.com");
@@ -39,6 +37,8 @@ public class CountryTest {
         response.statusCode(200);
 
         cookies = response.extract().detailedCookies();
+
+        idsForCleanedUp = new ArrayList<>();
     }
 
     @DataProvider
@@ -74,10 +74,27 @@ public class CountryTest {
                 .post("/school-service/api/countries")
                 .then().log().body();
 
+        if(validatableResponse.extract().response().getStatusCode() == 201) {
+            idsForCleanedUp.add(validatableResponse.extract().jsonPath().getString("id"));
+        }
+
         validatableResponse.statusCode((int) Double.parseDouble(statusCode));
 
         if (errorMessage != null && !errorMessage.equalsIgnoreCase("NULL")) {
             validatableResponse.body("message", containsString(errorMessage));
+        }
+    }
+
+    @AfterClass
+    public void cleanup() {
+        for (String id : idsForCleanedUp) {
+            given()
+                    .cookies(cookies)
+                    .when()
+                    .delete("/school-service/api/countries/" + id)
+                    .then()
+                    .statusCode(200)
+            ;
         }
     }
 }
