@@ -8,9 +8,10 @@ public class GenericFactoryTest {
 
     @Factory
     public Object[] tests() throws IOException {
-        Object[] tests = new Object[2];
+        Object[] tests = new Object[3];
         tests[0] = new GenericAPITest("src/test/resources/tests_excels/countryTestCases.xlsx");
         tests[1] = new GenericAPITest("src/test/resources/tests_excels/feeTypeTestCases.xlsx");
+        tests[2] = new GenericAPITest("src/test/resources/tests_excels/bankAccountTestCases.xlsx");
         return tests;
     }
 }
