@@ -12,11 +12,13 @@ import java.util.Map;
 public class ExcelReader {
     private final Workbook workbook;
     private final Sheet sheet;
+    private final DataFormatter dataFormatter;
 
     public ExcelReader(String pathname) throws IOException {
         File f = new File(pathname);
         workbook = WorkbookFactory.create(f);
         sheet = workbook.getSheetAt(0);
+        dataFormatter = new DataFormatter();
     }
 
     public Map<String, String> getMap() throws IOException {
@@ -69,7 +71,7 @@ public class ExcelReader {
                 String key = titles.get(j);
                 String value = null;
                 if(row.getCell(j) != null) {
-                    value = row.getCell(j).toString();
+                    value = dataFormatter.formatCellValue(row.getCell(j));
                     if(value.equals("\"\"")) {
                         value = "";
                     }

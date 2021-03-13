@@ -44,8 +44,8 @@ public class GenericAPITest {
         cookies = response.extract().detailedCookies();
 
         idsForCleanedUp = new ArrayList<>();
-        apiPath = "/school-service/api/countries/"; // fee-types
-        reader = new ExcelReader("src/test/resources/tests_excels/countryTestCases.xlsx"); // feeTypeTestCases.xlsx
+        apiPath = "/school-service/api/fee-types/"; // fee-types
+        reader = new ExcelReader("src/test/resources/tests_excels/feeTypeTestCases.xlsx"); // feeTypeTestCases.xlsx
     }
 
     @DataProvider
