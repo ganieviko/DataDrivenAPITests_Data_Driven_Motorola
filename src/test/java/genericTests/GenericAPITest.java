@@ -27,11 +27,15 @@ public class GenericAPITest {
 
     @BeforeClass
     public void setUp() throws IOException {
-        RestAssured.baseURI = "https://test.campus.techno.study";
+        reader = new ExcelReader("src/test/resources/tests_excels/countryTestCases.xlsx"); // feeTypeTestCases.xlsx
+        reader.changeSheet(1);
+        Map<String, String> settings = reader.getMap();
+
+        RestAssured.baseURI = settings.get("baseURI");
 
         Map<String, String> credentials = new HashMap<>();
-        credentials.put("username", "daulet2030@gmail.com");
-        credentials.put("password", "TechnoStudy123@");
+        credentials.put("username", settings.get("username"));
+        credentials.put("password", settings.get("password"));
         ValidatableResponse response = given()
                 .body(credentials)
                 .contentType(ContentType.JSON)
@@ -44,12 +48,12 @@ public class GenericAPITest {
         cookies = response.extract().detailedCookies();
 
         idsForCleanedUp = new ArrayList<>();
-        apiPath = "/school-service/api/fee-types/"; // fee-types
-        reader = new ExcelReader("src/test/resources/tests_excels/feeTypeTestCases.xlsx"); // feeTypeTestCases.xlsx
+        apiPath = settings.get("apiPath");
     }
 
     @DataProvider
     private Object[][] testCases() throws IOException {
+        reader.changeSheet(0);
         List<Map<String, String>> rows = reader.getListOfMaps();
         Object[][] data = new Object[rows.size()][3];
 

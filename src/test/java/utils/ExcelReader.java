@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ExcelReader {
     private final Workbook workbook;
-    private final Sheet sheet;
+    private Sheet sheet;
     private final DataFormatter dataFormatter;
 
     public ExcelReader(String pathname) throws IOException {
@@ -19,6 +19,10 @@ public class ExcelReader {
         workbook = WorkbookFactory.create(f);
         sheet = workbook.getSheetAt(0);
         dataFormatter = new DataFormatter();
+    }
+
+    public void changeSheet(int index){
+        sheet = workbook.getSheetAt(index);
     }
 
     public Map<String, String> getMap() throws IOException {
