@@ -25,9 +25,12 @@ public class GenericAPITest {
     private String apiPath;
     private ExcelReader reader;
 
+    public GenericAPITest(String pathToExcel) throws IOException {
+        reader = new ExcelReader(pathToExcel); // feeTypeTestCases.xlsx
+    }
+
     @BeforeClass
     public void setUp() throws IOException {
-        reader = new ExcelReader("src/test/resources/tests_excels/countryTestCases.xlsx"); // feeTypeTestCases.xlsx
         reader.changeSheet(1);
         Map<String, String> settings = reader.getMap();
 
